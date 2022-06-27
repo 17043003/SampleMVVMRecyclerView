@@ -3,19 +3,38 @@ package com.ishzk.android.samplemvvmrecyclerview
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.ishzk.android.samplemvvmrecyclerview.databinding.ActivityMainBinding
 import com.ishzk.android.samplemvvmrecyclerview.databinding.MenuRowBinding
 import com.ishzk.android.samplemvvmrecyclerview.model.User
 
 class MainActivity : AppCompatActivity() {
+    lateinit var binding: ActivityMainBinding
+    private val listAdapter by lazy { UserListAdapter() }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
+        // get view binding.
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        // set RecyclerView Adapter.
+        binding.userRecyclerView.adapter = listAdapter
+        binding.userRecyclerView.layoutManager = LinearLayoutManager(applicationContext, RecyclerView.VERTICAL, false)
+        listAdapter.submitList(
+            listOf(
+                User(1, "aaa", 1),
+                User(2, "bbb", 2),
+            )
+        )
     }
+
+
 }
 
 class UserListAdapter: ListAdapter<User, UserItemViewHolder>(DIFF_UTIL_ITEM_CALLBACK){
@@ -32,7 +51,7 @@ class UserListAdapter: ListAdapter<User, UserItemViewHolder>(DIFF_UTIL_ITEM_CALL
 class UserItemViewHolder(private val binding: MenuRowBinding): RecyclerView.ViewHolder(binding.root){
     fun bind(user: User){
         binding.editTextName.setText(user.name)
-        binding.editTextTextAge.setText(user.age)
+        binding.editTextTextAge.setText(user.age.toString())
     }
 }
 
